@@ -5,6 +5,8 @@ using Cosmos.HAL;
 using Cosmos.Core.Memory;
 using SipaaKernelV2.UI;
 using System;
+using Cosmos.System.FileSystem;
+using Cosmos.System.FileSystem.VFS;
 
 namespace SipaaKernelV2
 {
@@ -17,15 +19,36 @@ namespace SipaaKernelV2
             ScreenHeight = 720;
         public static bool GUIMode = false;
         public static Button shutdownBtn;
+        public static Button consoleModeBtn;
         public static TextView helloWorldTextView;
         public static byte _deltaT;
         public static bool Pressed;
         public static object FreeCount;
         public static int _fps;
         public static int _frames;
+        public static CosmosVFS vfs;
+        public static Bitmap cursor = new Bitmap(Files.Cursor);
+        public static Bitmap wallpaper = new Bitmap(Files.Wallpaper);
 
+        protected override void OnBoot()
+        {
+            try
+            {
+                Console.WriteLine("Starting SipaaKernel...");
+                Cosmos.HAL.Global.PIT.Wait(2000);
+                base.OnBoot();
+            }
+            catch (Exception ex)
+            {
+                CrashScreen.DisplayKernelErrorAndReboot(ex.Message);
+            }
+        }
         protected override void BeforeRun()
         {
+            Console.WriteLine("Initializing Filesystem...");
+            vfs = new CosmosVFS();
+            VFSManager.RegisterVFS(vfs);
+            Console.Clear();
             Shell.LoadCommands();
         }
 
@@ -42,8 +65,9 @@ namespace SipaaKernelV2
             Sys.MouseManager.ScreenWidth = ScreenWidth;
             Sys.MouseManager.ScreenHeight = ScreenHeight;
 
-            shutdownBtn = new Button("Shutdown", 8, 8 + (uint)font.Height * 2);
-            helloWorldTextView = new TextView("Hello world on a TextView!", 8, 8 + (uint)font.Height * 2 + shutdownBtn.Height);
+            shutdownBtn = new Button("Shutdown", 8, ScreenHeight - 48, 150, 48);
+            consoleModeBtn = new Button("Console mode", 158, ScreenHeight - 48, 150, 48);
+            helloWorldTextView = new TextView("Hello world on a TextView!", 8, 8 + (uint)font.Height * 2 + 2);
 
             GUIMode = true;
         }
@@ -53,7 +77,7 @@ namespace SipaaKernelV2
             int y = 8;
             Pen whitePen = ColorPens.whitePen;
             c.DrawString(_fps + " FPS", font, whitePen, x, y);
-            c.DrawString("SipaaKernel v2 (Alpha)", font, whitePen, x, y + font.Height);
+            c.DrawString("SipaaKernel v2 (Beta)", font, whitePen, x, y + font.Height);
         }
 
         protected override void Run()
@@ -83,19 +107,28 @@ namespace SipaaKernelV2
                             break;
                     }
 
-                    c.DrawFilledRectangle(ColorPens.blackPen, new Point(0, 0), (int)ScreenWidth, (int)ScreenHeight);
+                    c.DrawImage(wallpaper, 0, 0);
 
                     DrawDebug();
 
+                    c.DrawFilledRectangle(ColorPens.whitePen, new Point(0, (int)ScreenHeight - 48), (int)ScreenWidth, 48);
+
                     shutdownBtn.Draw(c);
+                    consoleModeBtn.Draw(c);
                     helloWorldTextView.Draw(c);
                     shutdownBtn.Update();
+                    consoleModeBtn.Update();
 
                     if (shutdownBtn.Click)
                     {
                         Sys.Power.Shutdown();
                     }
-                    c.DrawFilledRectangle(ColorPens.whitePen, (int)Sys.MouseManager.X, (int)Sys.MouseManager.Y, 12, 8);
+                    if (consoleModeBtn.Click)
+                    {
+                        ConsoleMode();
+                        return;
+                    }
+                    c.DrawImageAlpha(cursor, (int)Sys.MouseManager.X, (int)Sys.MouseManager.Y);
 
                     c.Display();
                 }

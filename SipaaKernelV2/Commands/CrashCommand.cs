@@ -12,6 +12,7 @@ namespace SipaaKernelV2.Commands
         {
             this.names = new string[] { "crash" };
             this.Description = "Crashes SipaaKernel.";
+            this.usages = new string[] { "crash" };
         }
         public override CommandResult Execute(List<string> args)
         {

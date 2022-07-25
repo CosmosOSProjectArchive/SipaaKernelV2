@@ -9,18 +9,40 @@ namespace SipaaKernelV2
     public class Shell
     {
         public static List<Command> cmds = new List<Command>();
+        public static string CurrentDir = @"0:\";
 
         internal static void LoadCommands()
         {
             Console.WriteLine("SipaaKernel V2");
+            Console.WriteLine("Type help to get all commands.");
             cmds.Add(new CrashCommand());
+            cmds.Add(new SetResolutionCommand());
+            cmds.Add(new GUICommand());
+            cmds.Add(new HelpCommand());
+            cmds.Add(new DiskCommand());
+        }
+
+        internal static Command GetCommand(string command)
+        {
+            for (int i = 0; i < cmds.Count; i++)
+            {
+                for (int j = 0; j < cmds[i].names.Length; j++)
+                {
+                    if (command.ToLower() == cmds[i].names[j])
+                    {
+                        return cmds[i];
+                    }
+                }
+            }
+            return null;
         }
 
         internal static void GetInput()
         {
-            Console.Write("shell:>");
-
+            Console.WriteLine();
+            Console.Write("shell@" + CurrentDir + ":>");
             string input = Console.ReadLine();
+            Console.WriteLine();
             string[] pos = input.Split(' ');
             bool exec = false;
             List<string> cmdArgs;
@@ -53,6 +75,9 @@ namespace SipaaKernelV2
                         }else if (result == CommandResult.Fatal)
                         {
                             throw new Exception("Fatal error occured during command execution.");
+                        }else if (result == CommandResult.ExitGetInput)
+                        {
+                            return;
                         }
                     }
                 }
@@ -69,12 +94,14 @@ namespace SipaaKernelV2
         Sucess,
         Error,
         InvalidArgs,
-        Fatal
+        Fatal,
+        ExitGetInput
     }
 
     public abstract class Command
     {
         public string[] names;
+        public string[] usages;
         public string Description;
 
         public abstract CommandResult Execute(List<string> args);
