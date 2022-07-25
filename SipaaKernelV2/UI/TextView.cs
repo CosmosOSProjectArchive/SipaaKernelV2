@@ -9,27 +9,23 @@ using System.Threading.Tasks;
 
 namespace SipaaKernelV2.UI
 {
-    public class TextView
+    public class TextView : Control
     {
         private string text = "Button";
-        private uint x = 0, y = 0;
         private Color textColor = Color.White;
 
         public string Text { get { return text; } set { text = value; } }
 
         public Color TextColor { get { return textColor; } set { textColor = value; } }
 
-        public uint X { get { return x; } set { x = value; } }
-        public uint Y { get { return y; } set { y = value; } }
-
         public TextView(string text, uint x, uint y)
         {
             this.text = text;
-            this.x = x;
-            this.y = y;
+            this.X = x;
+            this.Y = y;
         }
 
-        public void Draw(Canvas c)
+        public override void Draw(Canvas c)
         {
             c.DrawString(Text, PCScreenFont.Default, new Pen(TextColor), (int)X, (int)Y);
         }
