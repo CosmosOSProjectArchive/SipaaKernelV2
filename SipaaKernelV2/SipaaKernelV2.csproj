@@ -23,11 +23,13 @@
 
     <ItemGroup>
       <None Remove="Resources\pointer.bmp" />
+      <None Remove="Resources\sipaakernellogo.bmp" />
       <None Remove="Resources\Wallpaper.bmp" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Include="Resources\pointer.bmp" />
+      <EmbeddedResource Include="Resources\sipaakernellogo.bmp" />
       <EmbeddedResource Include="Resources\Wallpaper.bmp" />
     </ItemGroup>
 
