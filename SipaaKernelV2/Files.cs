@@ -12,5 +12,7 @@ namespace SipaaKernelV2
         public static byte[] Cursor; 
         [ManifestResourceStream(ResourceName = "SipaaKernelV2.Resources.Wallpaper.bmp")]
         public static byte[] Wallpaper;
+        [ManifestResourceStream(ResourceName = "SipaaKernelV2.Resources.sipaakernellogo.bmp")]
+        public static byte[] OSLogo;
     }
 }

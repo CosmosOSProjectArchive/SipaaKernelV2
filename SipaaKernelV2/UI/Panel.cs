@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SipaaKernelV2.UI
 {
-    internal class Panel : Control
+    public class Panel : Control
     {
         private uint width = 150, height = 150;
         private bool visible = false;
@@ -42,7 +42,7 @@ namespace SipaaKernelV2.UI
         }
 
         public override void Update()
-        {
+        { 
             // Verify if the panel is visible
             if (Visible)
             {
