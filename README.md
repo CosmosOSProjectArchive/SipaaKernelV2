@@ -5,6 +5,8 @@ The 2nd version of SipaaKernel
 Current features :
 
 * GUI
-* UI Library (in developement)
-* Command-line mode (in developement)
+* UI Library
+* Command-line mode
 * Exception Handler
+* Application System
+* File system
