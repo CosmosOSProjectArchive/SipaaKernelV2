@@ -9,20 +9,29 @@ using Cosmos.System.FileSystem;
 using Cosmos.System.FileSystem.VFS;
 using SipaaKernelV2.Applications.SipaaDesktop;
 using SipaaKernelV2.Applications.OSVersion;
+using SipaaKernelV2.Core;
+using SipaaKernelV2.Applications.Sipad;
+using SipaaKernelV2.Applications.UIGallery;
+using SipaaKernelV2.Core.Translations;
+using SipaaKernelV2.Core.FileSystem;
+using SipaaKernelV2.Core.Keyboard;
+using SipaaKernelV2.Applications.BootScreen;
+using SipaaKernelV2.Applications.FileExplorer;
+using SipaaKernelV2.Applications.CrashScreen;
 
 namespace SipaaKernelV2
 {
     public class Kernel : Sys.Kernel
     {
         public static Canvas c;
-        public static Font font = PCScreenFont.Default;
-        public const string OSName = "SipaaKernel V2 Pre-Release 1";
-        public const double OSVersion = 22.2, OSBuild = 1001.254;
+        public static Font font = PCScreenFont.LoadFont(Files.Font);
+        public const string OSName = "SipaaKernel V2";
+        public const double OSVersion = 22.2, OSBuild = 1081.362;
         public static uint
             ScreenWidth = 1280,
             ScreenHeight = 720;
         public static bool GUIMode = false;
-        internal static Application[] apps = new Application[] { new SipaaDesktop(), new OSVersion() };
+        internal static Application[] apps = new Application[] { new SipaaDesktop(), new OSVersion(), new UIGallery(),new Sipad(), new FileExplorer() };
         internal static Application CurrentApplication = apps[0];
         public static byte _deltaT;
         public static bool Pressed;
@@ -30,16 +39,19 @@ namespace SipaaKernelV2
         public static int _fps;
         public static int _frames;
         public static CosmosVFS vfs;
-        public static Bitmap cursor = new Bitmap(Files.Cursor);
-        public static Bitmap wallpaper = new Bitmap(Files.Wallpaper);
-        public static Bitmap logo = new Bitmap(Files.OSLogo);
+        public static LanguageBase language = new EnglishLang();
+        public static bool booting;
+        public static int bootprogress;
+
+        internal static void ResetAppList()
+        {
+            apps = new Application[] { new SipaaDesktop(), new OSVersion(), new UIGallery(), new Sipad() };
+        }
 
         protected override void OnBoot()
         {
             try
             {
-                Console.WriteLine("Starting SipaaKernel...");
-                Cosmos.HAL.Global.PIT.Wait(2000);
                 base.OnBoot();
             }
             catch (Exception ex)
@@ -50,11 +62,11 @@ namespace SipaaKernelV2
 
         protected override void BeforeRun()
         {
-            Console.WriteLine("Initializing Filesystem...");
-            vfs = new CosmosVFS();
-            VFSManager.RegisterVFS(vfs);
-            Console.Clear();
-            Shell.LoadCommands();
+            OpenApplication(new BootApp());
+            GoToGUIMode();
+            if (!FSDriver.Initialize())
+                Console.WriteLine("Cannot init filesystem!");
+            booting = true;
         }
 
         internal static void OpenApplication(Application app)
@@ -67,6 +79,8 @@ namespace SipaaKernelV2
         {
             c.Disable();
             GUIMode = false;
+            if (!Shell.LoadedCommands)
+                Shell.LoadCommands();
         }
 
         public static void GoToGUIMode()
@@ -95,23 +109,32 @@ namespace SipaaKernelV2
 
                     FreeCount = Heap.Collect();
 
-                    switch (Sys.MouseManager.MouseState)
+                    if (booting)
                     {
-                        case Sys.MouseState.Left:
-                            Pressed = true;
-                            break;
-                        case Sys.MouseState.None:
-                            Pressed = false;
-                            break;
+                        bootprogress++;
+                        if (CurrentApplication != null)
+                        {
+                            CurrentApplication.Draw(c);
+                            CurrentApplication.Update();
+                        }
+                        if (bootprogress == 250)
+                        {
+                            booting = false;
+                            OpenApplication(apps[0]);
+                        }
                     }
-
-                    if (CurrentApplication != null)
+                    else
                     {
-                        CurrentApplication.Draw(c);
-                        CurrentApplication.Update();
-                    }
+                        KBPS2.Update();
 
-                    c.DrawImageAlpha(cursor, (int)Sys.MouseManager.X, (int)Sys.MouseManager.Y);
+                        if (CurrentApplication != null)
+                        {
+                            CurrentApplication.Draw(c);
+                            CurrentApplication.Update();
+                        }
+
+                        c.DrawImageAlpha(Bitmaps.cursor, (int)Sys.MouseManager.X, (int)Sys.MouseManager.Y);
+                    }
 
                     c.Display();
                 }
@@ -122,7 +145,10 @@ namespace SipaaKernelV2
             }
             catch (Exception ex)
             {
-                CrashScreen.DisplayAndReboot(ex.Message);
+                if (GUIMode) 
+                    OpenApplication(new CrashApp(ex));
+                else
+                    CrashScreen.DisplayAndReboot(ex.Message);
             }
         }
     }

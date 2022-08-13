@@ -1,5 +1,6 @@
 ﻿using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
+using SipaaKernelV2.Core.Keyboard;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,7 +12,7 @@ namespace SipaaKernelV2.UI
 {
     public class TextView : Control
     {
-        private string text = "Button";
+        private string text = "Hello, world!";
         private Color textColor = Color.White;
 
         public string Text { get { return text; } set { text = value; } }
@@ -27,7 +28,7 @@ namespace SipaaKernelV2.UI
 
         public override void Draw(Canvas c)
         {
-            c.DrawString(Text, PCScreenFont.Default, new Pen(TextColor), (int)X, (int)Y);
+            c.DrawString(Text, Kernel.font, new Pen(TextColor), (int)X, (int)Y);
         }
     }
 }

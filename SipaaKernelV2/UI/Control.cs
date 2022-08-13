@@ -18,9 +18,5 @@ namespace SipaaKernelV2.UI
         public virtual void Draw(Canvas c) { }
 
         public virtual void Update() { }
-
-        public virtual void OnMessage(Message msg, object args)
-        {
-        }
     }
 }
