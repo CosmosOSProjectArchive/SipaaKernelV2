@@ -12,7 +12,7 @@ namespace SipaaKernelV2.UI
         private uint width = 150, height = 150;
         private bool visible = false;
         private List<Control> controls = new List<Control>();
-
+        private SysTheme.ThemeBase theme = SysTheme.ThemeManager.GetCurrentTheme();
         public List<Control> Controls { get { return controls; } set { controls = value; } }
         public uint Width { get { return width; } set { width = value; } }
         public uint Height { get { return height; } set { height = value; } }
@@ -30,10 +30,11 @@ namespace SipaaKernelV2.UI
         public override void Draw(Canvas c)
         {
             // Verify if the panel is visible
-            if (Visible)
+            if (visible == true)
             {
-                c.DrawRectangle(ColorPens.whitePen, X, Y, Width, Height); // Draw panel rectangle
-
+                c.DrawFilledRectangle(new Pen(theme.BackColor), (int)X, (int)Y, (int)Width, (int)Height); // Draw panel rectangle
+                if (theme.BorderSize > 1)
+                    c.DrawRectangle(new Pen(theme.BorderColor, theme.BorderSize), (int)X, (int)Y, (int)width, (int)height);
                 foreach (Control ctrl in Controls)
                 {
                     ctrl.Draw(c);
@@ -44,7 +45,7 @@ namespace SipaaKernelV2.UI
         public override void Update()
         { 
             // Verify if the panel is visible
-            if (Visible)
+            if (visible)
             {
                 foreach (Control ctrl in Controls)
                 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SipaaKernelV2.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
