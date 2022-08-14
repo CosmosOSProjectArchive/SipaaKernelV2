@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using SipaaKernelV2.Core.Graphics;
 
 namespace SipaaKernelV2.UI.SysTheme
 {

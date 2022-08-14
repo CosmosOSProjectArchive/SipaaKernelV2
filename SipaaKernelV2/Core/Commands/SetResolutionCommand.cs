@@ -1,4 +1,5 @@
-﻿using SipaaKernelV2.Core;
+﻿using Cosmos.Core;
+using SipaaKernelV2.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,12 +22,13 @@ namespace SipaaKernelV2.Core.Commands
             {
                 if (args.Count == 2)
                 {
-                    uint width = uint.Parse(args[0]);
-                    uint height = uint.Parse(args[1]);
-                    Kernel.ScreenWidth = width;
-                    Kernel.ScreenHeight = height;
-                    Kernel.ResetAppList();
-                    Console.WriteLine("Changes will be applied when you restart GUI.");
+                    /**uint width = uint.Parse(args[0]);
+                    uint height = uint.Parse(args[1]); 
+                    VBE.getModeInfo().
+                    Kernel.ScreenWidth = VBE.getModeInfo().width;
+                    Kernel.ScreenHeight = VBE.getModeInfo().height;
+                    Cosmos.HAL.Global.PIT.Wait(1200);**/
+                    Console.WriteLine("Sorry, you can't change the resolution with current driver.");
                     return CommandResult.Sucess;
                 }
                 else

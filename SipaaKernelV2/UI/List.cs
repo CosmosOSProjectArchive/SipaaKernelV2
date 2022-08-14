@@ -1,4 +1,5 @@
 ﻿using Cosmos.System.Graphics;
+using SipaaKernelV2.Core.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,11 +33,11 @@ namespace SipaaKernelV2.UI
             this.Y = y;
         }
 
-        public override void Draw(Canvas c)
+        public override void Draw(FrameBuffer c)
         {
-            c.DrawFilledRectangle(new Pen(theme.BackColor), (int)X, (int)Y, (int)Width, (int)Height); // Draw panel rectangle
+            c.DrawFilledRectangle((int)X, (int)Y, (int)Width, (int)Height, 0, theme.BackColor); // Draw panel rectangle
             if (theme.BorderSize > 1)
-                c.DrawRectangle(new Pen(theme.BorderColor, theme.BorderSize), (int)X, (int)Y, (int)width, (int)height);
+                c.DrawRectangle((int)X, (int)Y, (int)width, (int)height, 0, theme.BorderColor);
 
 
             foreach (Button btn in buttons)

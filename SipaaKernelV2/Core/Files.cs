@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IL2CPU.API.Attribs;
+using SipaaKernelV2.Core.Graphics;
 
 namespace SipaaKernelV2.Core
 {
@@ -41,7 +42,8 @@ namespace SipaaKernelV2.Core
         public static byte[] ThrowException;
         [ManifestResourceStream(ResourceName = "SipaaKernelV2.Resources.consolemode.bmp")]
         public static byte[] ConsoleMode;
-        [ManifestResourceStream(ResourceName = "SipaaKernelV2.Resources.font.psf")]
+
+        [ManifestResourceStream(ResourceName = "SipaaKernelV2.Resources.SegoeUI.btf")]
         public static byte[] Font;
     }
 }

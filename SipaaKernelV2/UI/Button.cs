@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SipaaKernelV2.UI.SysTheme;
+using SipaaKernelV2.Core.Graphics;
 
 namespace SipaaKernelV2.UI
 {
@@ -17,14 +18,14 @@ namespace SipaaKernelV2.UI
         private uint width = 150, height = 40;
         private ButtonState state;
         private ThemeBase theme = ThemeManager.GetCurrentTheme();
-        private Bitmap bmp;
+        private FrameBuffer bmp;
 
         public string Text { get { return text; } set { text = value; } }
         public uint Width { get { return width; } set { width = value; } }
         public uint Height { get { return height; } set { height = value; } }
         public ButtonState ButtonState { get { return state; } }
         public ThemeBase Theme { get { return theme; } set { theme = value; } }
-        public Bitmap Bitmap { get { return bmp; } set { bmp = value; } }
+        public FrameBuffer Bitmap { get { return bmp; } set { bmp = value; } }
 
         public Button(string text, uint x, uint y, uint width, uint height)
         {
@@ -41,31 +42,31 @@ namespace SipaaKernelV2.UI
             this.Y = y;
         }
 
-        public override void Draw(Canvas c)
+        public override void Draw(FrameBuffer c)
         {
             // Draw button rectangle 
             switch (this.state)
             {
                 case ButtonState.Idle:
-                    c.DrawFilledRectangle(new Pen(theme.BackColor), (int)X, (int)Y, (int)width, (int)height);
+                    c.DrawFilledRectangle((int)X, (int)Y, (int)width, (int)height, 0, theme.BackColor);
                     break;
                 case ButtonState.Hover:
-                    c.DrawFilledRectangle(new Pen(theme.HoveredBackColor), (int)X, (int)Y, (int)width, (int)height);
+                    c.DrawFilledRectangle((int)X, (int)Y, (int)width, (int)height, 0, theme.HoveredBackColor);
                     break;
                 case ButtonState.Clicked:
-                    c.DrawFilledRectangle(new Pen(theme.ClickedBackColor), (int)X, (int)Y, (int)width, (int)height);
+                    c.DrawFilledRectangle((int)X, (int)Y, (int)width, (int)height, 0, theme.ClickedBackColor);
                     break;
             }
             if (theme.BorderSize > 1)
             {
-                c.DrawRectangle(new Pen(theme.BorderColor, theme.BorderSize), (int)X, (int)Y, (int)width, (int)height);
+                c.DrawRectangle((int)X, (int)Y, (int)width, (int)height, 0, theme.BorderColor);
             }
             // Draw text & bitmap under the button
-            int sx = (int) (X + (width / 2) - (text.Length * Kernel.font.Width / 2));
-            c.DrawString(Text, Kernel.font, new Pen(theme.ForeColor), sx, (int)this.Y + (int)this.Height / 2 - (int)Kernel.font.Height / 2);
+            int sx = (int)Kernel.font.MeasureString(Text);
+            c.DrawString(sx, (int)this.Y + (int)this.Height / 2 - 12 / 2, Text, Kernel.font, theme.ForeColor);
             if (bmp != null)
             {
-                c.DrawImageAlpha(bmp, (int)X + 8, (int)this.Y + (int)this.Height / 2 - (int)bmp.Height / 2);
+                c.DrawImage((int)X + 8, (int)this.Y + (int)this.Height / 2 - (int)bmp.Height / 2,bmp, true);
             }
         }
 

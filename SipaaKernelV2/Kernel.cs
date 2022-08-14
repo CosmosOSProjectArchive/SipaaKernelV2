@@ -1,6 +1,5 @@
 ﻿using Sys = Cosmos.System;
 using Cosmos.System.Graphics;
-using Cosmos.System.Graphics.Fonts;
 using Cosmos.HAL;
 using Cosmos.Core.Memory;
 using SipaaKernelV2.UI;
@@ -18,21 +17,24 @@ using SipaaKernelV2.Core.Keyboard;
 using SipaaKernelV2.Applications.BootScreen;
 using SipaaKernelV2.Applications.FileExplorer;
 using SipaaKernelV2.Applications.CrashScreen;
+using SipaaKernelV2.UI.SysTheme;
+using SipaaKernelV2.Core.Graphics;
+using Cosmos.Core;
 
 namespace SipaaKernelV2
 {
-    public class Kernel : Sys.Kernel
+    public unsafe class Kernel : Sys.Kernel
     {
-        public static Canvas c;
-        public static Font font = PCScreenFont.LoadFont(Files.Font);
-        public const string OSName = "SipaaKernel V2";
-        public const double OSVersion = 22.2, OSBuild = 1081.362;
+        public static FrameBuffer f;
+        public static Font font = Font.Default;
+        public const string OSName = "SipaaKernel V2 Developer Beta";
+        public const double OSVersion = 22.09, OSBuild = 1154.500;
+        public const bool IsDeveloperBeta = true;
         public static uint
-            ScreenWidth = 1280,
-            ScreenHeight = 720;
+            ScreenWidth = VBE.getModeInfo().width,
+            ScreenHeight = VBE.getModeInfo().height;
         public static bool GUIMode = false;
-        internal static Application[] apps = new Application[] { new SipaaDesktop(), new OSVersion(), new UIGallery(),new Sipad(), new FileExplorer() };
-        internal static Application CurrentApplication = apps[0];
+        internal static Application CurrentApplication = new SipaaDesktop();
         public static byte _deltaT;
         public static bool Pressed;
         public static object FreeCount;
@@ -42,11 +44,6 @@ namespace SipaaKernelV2
         public static LanguageBase language = new EnglishLang();
         public static bool booting;
         public static int bootprogress;
-
-        internal static void ResetAppList()
-        {
-            apps = new Application[] { new SipaaDesktop(), new OSVersion(), new UIGallery(), new Sipad() };
-        }
 
         protected override void OnBoot()
         {
@@ -77,7 +74,7 @@ namespace SipaaKernelV2
 
         public static void ConsoleMode()
         {
-            c.Disable();
+            f.Dispose();
             GUIMode = false;
             if (!Shell.LoadedCommands)
                 Shell.LoadCommands();
@@ -85,7 +82,7 @@ namespace SipaaKernelV2
 
         public static void GoToGUIMode()
         {
-            c = FullScreenCanvas.GetFullScreenCanvas(new Mode((int)ScreenWidth, (int)ScreenHeight, ColorDepth.ColorDepth32));
+            f = new(VBE.getModeInfo().width, VBE.getModeInfo().height);
             Sys.MouseManager.ScreenWidth = ScreenWidth;
             Sys.MouseManager.ScreenHeight = ScreenHeight;
 
@@ -114,34 +111,31 @@ namespace SipaaKernelV2
                         bootprogress++;
                         if (CurrentApplication != null)
                         {
-                            CurrentApplication.Draw(c);
+                            CurrentApplication.Draw(f);
                             CurrentApplication.Update();
                         }
                         if (bootprogress == 250)
                         {
                             booting = false;
-                            OpenApplication(apps[0]);
+                            OpenApplication(new SipaaDesktop());
                         }
                     }
                     else
                     {
                         KBPS2.Update();
-
                         if (CurrentApplication != null)
                         {
-                            CurrentApplication.Draw(c);
+                            CurrentApplication.Draw(f);
                             CurrentApplication.Update();
-                        }
-
-                        c.DrawImageAlpha(Bitmaps.cursor, (int)Sys.MouseManager.X, (int)Sys.MouseManager.Y);
+                        } 
+                        f.DrawImage((int)Sys.MouseManager.X, (int)Sys.MouseManager.Y, Bitmaps.cursor, true);
                     }
-
-                    c.Display();
                 }
                 else
                 {
                     Shell.GetInput();
                 }
+                f.CopyTo((uint*)VBE.getLfbOffset());
             }
             catch (Exception ex)
             {

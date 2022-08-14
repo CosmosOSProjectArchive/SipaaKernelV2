@@ -1,7 +1,8 @@
 ﻿using Cosmos.System.Graphics;
 using SipaaKernelV2.UI;
-using System.Drawing;
 using System;
+using SipaaKernelV2.Core.Graphics;
+
 namespace SipaaKernelV2.Applications.CrashScreen
 {
     internal class CrashScreenView : View
@@ -11,23 +12,19 @@ namespace SipaaKernelV2.Applications.CrashScreen
         {
             this.ex = ex;
         }
-        private int GetFontWidth(string text)
-        {
-            return text.Length * Kernel.font.Width;
-        }
-        internal override void Draw(Canvas c)
+        internal override void Draw(FrameBuffer c)
         {
             int errorX = (int)Kernel.ScreenWidth / 2 - (int)Bitmaps.error.Width / 2;
-            int problemX = (int)Kernel.ScreenWidth / 2 - GetFontWidth("SipaaKernel ran into a problem...") / 2;
-            int sorryX = (int)Kernel.ScreenWidth / 2 - GetFontWidth("We are sorry for this exception, If this problem continue,") / 2;
-            int reportX = (int)Kernel.ScreenWidth / 2 - GetFontWidth("report it to the SipaaKernel Discord Server") / 2;
-            int exceptionInfoX = (int)Kernel.ScreenWidth / 2 - GetFontWidth(ex.GetType().FullName + " : " + ex.Message) / 2;
-            c.DrawFilledRectangle(new Pen(Color.FromArgb(237, 28, 36)), 0,0, (int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
-            c.DrawImage(Bitmaps.error, errorX, 40);
-            c.DrawString("SipaaKernel ran into a problem...", Kernel.font, ColorPens.whitePen, problemX, 40 + (int)Bitmaps.error.Height + 15);
-            c.DrawString("We are sorry for this exception, If this problem continue,", Kernel.font, ColorPens.whitePen, sorryX, 40 + (int)Bitmaps.logo.Height + 30);
-            c.DrawString("report it to the SipaaKernel Discord Server.", Kernel.font, ColorPens.whitePen, reportX, 40 + (int)Bitmaps.logo.Height + 45);
-            c.DrawString(ex.GetType().FullName + " : " + ex.Message, Kernel.font, ColorPens.whitePen, exceptionInfoX, (int)Kernel.ScreenHeight - 10 - Kernel.font.Height);
+            int problemX = (int)Kernel.ScreenWidth / 2 - (int)Kernel.font.MeasureString("SipaaKernel ran into a problem...") / 2;
+            int sorryX = (int)Kernel.ScreenWidth / 2 - (int)Kernel.font.MeasureString("We are sorry for this exception, If this problem continue,") / 2;
+            int reportX = (int)Kernel.ScreenWidth / 2 - (int)Kernel.font.MeasureString("report it to the SipaaKernel Discord Server") / 2;
+            int exceptionInfoX = (int)Kernel.ScreenWidth / 2 - (int)Kernel.font.MeasureString(ex.GetType().FullName + " : " + ex.Message) / 2;
+            c.DrawFilledRectangle(0, 0, (int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight, 0, Color.FromARGB(0, 237, 28, 36));
+            c.DrawImage(errorX, 40, Bitmaps.error);
+            c.DrawString(problemX, 40 + (int)Bitmaps.error.Height + 15, "SipaaKernel ran into a problem...", Kernel.font, Color.White);
+            c.DrawString(sorryX, 40 + (int)Bitmaps.error.Height + 30, "We are sorry for this exception, If this problem continue,", Kernel.font, Color.White);
+            c.DrawString(reportX, 40 + (int)Bitmaps.error.Height + 45, "report it to the SipaaKernel Discord Server.", Kernel.font, Color.White);
+            c.DrawString(exceptionInfoX, 40 + (int)Bitmaps.error.Height + 15, ex.GetType().FullName + " : " + ex.Message, Kernel.font, Color.White);
         }
 
         internal override void Update()

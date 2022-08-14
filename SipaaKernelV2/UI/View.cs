@@ -1,4 +1,5 @@
 ﻿using Cosmos.System.Graphics;
+using SipaaKernelV2.Core.Graphics;
 using System;
 using System.Collections.Generic;
 
@@ -10,7 +11,7 @@ namespace SipaaKernelV2.UI
         internal List<Control> controls;
         internal abstract void Update();
 
-        internal abstract void Draw(Canvas c);
+        internal abstract void Draw(FrameBuffer c);
         internal virtual void OnViewOpened() { }
     }
 }

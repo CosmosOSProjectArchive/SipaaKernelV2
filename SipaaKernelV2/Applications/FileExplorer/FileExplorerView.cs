@@ -1,7 +1,8 @@
 ﻿using Cosmos.System.Graphics;
+using SipaaKernelV2.Core.Graphics;
 using SipaaKernelV2.UI;
 using System.IO;
-
+using Desk = SipaaKernelV2.Applications.SipaaDesktop.SipaaDesktop;
 namespace SipaaKernelV2.Applications.FileExplorer
 {
     internal class FileExplorerView : View
@@ -19,12 +20,12 @@ namespace SipaaKernelV2.Applications.FileExplorer
             mainDrive.Bitmap = Bitmaps.ssd;
             shortAcessList.AddButton(mainDrive);
         }
-        internal override void Draw(Canvas c)
+        internal override void Draw(FrameBuffer c)
         {
-            c.DrawFilledRectangle(ColorPens.blackPen, 0, 0, (int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
-            c.DrawFilledRectangle(ColorPens.hoverButtonPen, 0, 0, (int)Kernel.ScreenWidth, 32);
-            c.DrawString("File Explorer (BETA)", Kernel.font, ColorPens.whitePen, 24 + 9, 10);
-            c.DrawImageAlpha(Bitmaps.folder, 4, 32 / 2 - (int)Bitmaps.uilib.Width / 2);
+            c.DrawFilledRectangle(0, 0, (int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight, 0, Color.Black);
+            c.DrawFilledRectangle(0, 0, (int)Kernel.ScreenWidth, 32, 0, Color.FromARGB(0, 32, 32, 32));
+            c.DrawString(24 + 9, 10, "File Explorer", Kernel.font, Color.White);
+            c.DrawImage(4, 32 / 2 - (int)Bitmaps.uilib.Width / 2, Bitmaps.folder, true);
             closeButton.Draw(c);
             shortAcessList.Draw(c);
             fileDirList.Draw(c);
@@ -59,7 +60,7 @@ namespace SipaaKernelV2.Applications.FileExplorer
             }
             if (closeButton.ButtonState == ButtonState.Clicked)
             {
-                Kernel.OpenApplication(Kernel.apps[0]);
+                Kernel.OpenApplication(new Desk());
             }
         }
     }

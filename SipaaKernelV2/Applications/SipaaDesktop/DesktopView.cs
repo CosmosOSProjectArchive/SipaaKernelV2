@@ -5,13 +5,18 @@ using SipaaKernelV2.Core;
 using SipaaKernelV2.UI;
 using SipaaKernelV2.UI.SysTheme;
 using System;
+using OSVer = SipaaKernelV2.Applications.OSVersion.OSVersion;
+using Spad = SipaaKernelV2.Applications.Sipad.Sipad;
+using UILib = SipaaKernelV2.Applications.UIGallery.UIGallery;
+using FileEx = SipaaKernelV2.Applications.FileExplorer.FileExplorer;
+using SipaaKernelV2.Core.Graphics;
+
 namespace SipaaKernelV2.Applications.SipaaDesktop
 {
     internal class DesktopView : View
     {
         Button openOSVersion, openUILibrary, openSipad,openFileExplorer, shutdown, consolemode, reboot, exButton;
         Panel appsPanel;
-        Window window;
         internal DesktopView()
         { 
             //window = new Window(Kernel.ScreenWidth / 2 - 640 / 2, Kernel.ScreenHeight / 2 - 480 / 2, 640, 480);
@@ -39,15 +44,16 @@ namespace SipaaKernelV2.Applications.SipaaDesktop
             openSipad.Bitmap = Bitmaps.sipad;
             openFileExplorer.Bitmap = Bitmaps.folder;
         }
-        internal override void Draw(Canvas c)
+        internal override void Draw(FrameBuffer c)
         {
-            c.DrawImage(Bitmaps.wallpaper, 0, 0);
-            c.DrawFilledRectangle(new Pen(ThemeManager.GetCurrentTheme().BackColor), 0, 0, (int)Kernel.ScreenWidth, 24);
-            c.DrawString("SipaaKernel V2 - Desktop", Kernel.font, new Pen(ThemeManager.GetCurrentTheme().ForeColor), 4, 4);
-            int timeWidth = (RTC.Year + "/" + RTC.Month + "/" + RTC.DayOfTheMonth + " " + RTC.Hour + ":" + RTC.Minute).Length * Kernel.font.Width;
-            c.DrawString(RTC.Year + "/" + RTC.Month + "/" + RTC.DayOfTheMonth + " " + RTC.Hour + ":" + RTC.Minute, Kernel.font, new Pen(ThemeManager.GetCurrentTheme().ForeColor), (int)Kernel.ScreenWidth / 2 - timeWidth / 2, 4);
+            c.DrawImage(0, 0, Bitmaps.wallpaper);
+            c.DrawFilledRectangle(0, 0, (int)Kernel.ScreenWidth, 24, 0, ThemeManager.GetCurrentTheme().BackColor);
+            c.DrawString(4, 4,"SipaaKernel V2 - Desktop", Kernel.font, ThemeManager.GetCurrentTheme().ForeColor);
+            int timeWidth = (int)Kernel.font.MeasureString(RTC.Year + "/" + RTC.Month + "/" + RTC.DayOfTheMonth + " " + RTC.Hour + ":" + RTC.Minute);
+            c.DrawString((int)Kernel.ScreenWidth / 2 - timeWidth / 2, 4, RTC.Year + "/" + RTC.Month + "/" + RTC.DayOfTheMonth + " " + RTC.Hour + ":" + RTC.Minute, Kernel.font, ThemeManager.GetCurrentTheme().ForeColor);
             // draw dock
-            c.DrawFilledRectangle(new Pen(ThemeManager.GetCurrentTheme().BackColor), 0, (int)Kernel.ScreenHeight - 40, (int)Kernel.ScreenWidth, 40);
+            c.DrawFilledRectangle(0, (int)Kernel.ScreenHeight - 40, (int)Kernel.ScreenWidth, 40, 0, ThemeManager.GetCurrentTheme().BackColor);
+            c.DrawString(4, (int)Kernel.ScreenHeight - 60, Kernel._fps + " FPS", Kernel.font, ThemeManager.GetCurrentTheme().ForeColor);
             //desktopTextView.Draw(c);
             openOSVersion.Draw(c);
             shutdown.Draw(c);
@@ -73,15 +79,15 @@ namespace SipaaKernelV2.Applications.SipaaDesktop
             exButton.Update();
             if (openOSVersion.ButtonState == ButtonState.Clicked)
             {
-                Kernel.OpenApplication(Kernel.apps[1]);
+                Kernel.OpenApplication(new OSVer());
             }
             if (openSipad.ButtonState == ButtonState.Clicked)
             {
-                Kernel.OpenApplication(Kernel.apps[3]);
+                Kernel.OpenApplication(new Spad());
             }
             if (openUILibrary.ButtonState == ButtonState.Clicked)
             {
-                Kernel.OpenApplication(Kernel.apps[2]);
+                Kernel.OpenApplication(new UILib());
             }
             if (shutdown.ButtonState == ButtonState.Clicked)
             {
@@ -93,7 +99,7 @@ namespace SipaaKernelV2.Applications.SipaaDesktop
             }
             if (openFileExplorer.ButtonState == ButtonState.Clicked)
             {
-                Kernel.OpenApplication(Kernel.apps[4]);
+                Kernel.OpenApplication(new FileEx());
             }
             if (consolemode.ButtonState == ButtonState.Clicked)
             {

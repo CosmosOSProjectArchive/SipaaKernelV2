@@ -1,29 +1,30 @@
-﻿using Cosmos.System.Graphics;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SipaaKernelV2.Core;
+using SipaaKernelV2.Core.Graphics;
+
 namespace SipaaKernelV2
 {
     internal class Bitmaps
     {
-        public static Bitmap cursor = new Bitmap(Files.Cursor);
-        public static Bitmap wallpaper = new Bitmap(Files.Wallpaper);
-        public static Bitmap logo = new Bitmap(Files.OSLogo);
-        public static Bitmap checkbox = new Bitmap(Files.CheckBox);
-        public static Bitmap checkedcheckbox = new Bitmap(Files.CheckedCheckBox);
-        public static Bitmap error = new Bitmap(Files.Error);
-        public static Bitmap file = new Bitmap(Files.File);
-        public static Bitmap folder = new Bitmap(Files.Folder);
-        public static Bitmap about = new Bitmap(Files.AboutOS);
-        public static Bitmap sipad = new Bitmap(Files.Sipad);
-        public static Bitmap uilib = new Bitmap(Files.UILibrary);
-        public static Bitmap ssd = new Bitmap(Files.SSD);
-        public static Bitmap throwex = new Bitmap(Files.ThrowException);
-        public static Bitmap shutdown = new Bitmap(Files.Shutdown);
-        public static Bitmap reboot = new Bitmap(Files.Reboot);
-        public static Bitmap consolemode = new Bitmap(Files.ConsoleMode);
+        public static FrameBuffer cursor = Bitmap.FromBitmap(Files.Cursor);
+        public static FrameBuffer wallpaper = Bitmap.FromBitmap(Files.Wallpaper);
+        public static FrameBuffer logo = Bitmap.FromBitmap(Files.OSLogo);
+        public static FrameBuffer checkbox = Bitmap.FromBitmap(Files.CheckBox);
+        public static FrameBuffer checkedcheckbox = Bitmap.FromBitmap(Files.CheckedCheckBox);
+        public static FrameBuffer error = Bitmap.FromBitmap(Files.Error);
+        public static FrameBuffer file = Bitmap.FromBitmap(Files.File);
+        public static FrameBuffer folder = Bitmap.FromBitmap(Files.Folder);
+        public static FrameBuffer about = Bitmap.FromBitmap(Files.AboutOS);
+        public static FrameBuffer sipad = Bitmap.FromBitmap(Files.Sipad);
+        public static FrameBuffer uilib = Bitmap.FromBitmap(Files.UILibrary);
+        public static FrameBuffer ssd = Bitmap.FromBitmap(Files.SSD);
+        public static FrameBuffer throwex = Bitmap.FromBitmap(Files.ThrowException);
+        public static FrameBuffer shutdown = Bitmap.FromBitmap(Files.Shutdown);
+        public static FrameBuffer reboot = Bitmap.FromBitmap(Files.Reboot);
+        public static FrameBuffer consolemode = Bitmap.FromBitmap(Files.ConsoleMode);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Cosmos.System;
 using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
+using SipaaKernelV2.Core.Graphics;
 using SipaaKernelV2.Core.Keyboard;
 using SipaaKernelV2.UI.SysTheme;
 using System;
@@ -41,30 +42,30 @@ namespace SipaaKernelV2.UI
             this.Y = y;
         }
 
-        public override void Draw(Canvas c)
+        public override void Draw(FrameBuffer c)
         {
-            c.DrawFilledRectangle(new Pen(theme.BackColor), (int)X, (int)Y, (int)width, (int)height);
+            c.DrawFilledRectangle((int)X, (int)Y, (int)width, (int)height, 0, theme.BackColor);
 
             if (theme.BorderSize > 1)
             {
-                c.DrawRectangle(new Pen(theme.BorderColor, theme.BorderSize), (int)X, (int)Y, (int)width, (int)height);
+                c.DrawRectangle((int)X, (int)Y, (int)width, (int)height, 0,theme.BorderColor);
             }
             if (text.Length > 0)
             {
                 if (!passwordFilter && multiline)
                 {
-                    c.DrawString(text, Kernel.font, new Pen(theme.ForeColor), (int)X + 4, (int)Y + 4);
+                    c.DrawString((int)X + 4, (int)Y + 4, text, Kernel.font, theme.ForeColor);
                 }
                 else if (!passwordFilter) 
                 {
-                    c.DrawString(text,Kernel.font, new Pen(theme.ForeColor), (int)X + 4, (int)Y + ((int)height / 2) - 4); 
+                    c.DrawString((int)X + 4, (int)Y + ((int)height / 2) - 4, text,Kernel.font,theme.ForeColor); 
                 }
-                else if (passwordFilter && multiline)
+                /**else if (passwordFilter && multiline)
                 {
                     int sx = (int)X + 4;
                     for (int i = 0; i < text.Length; i++)
                     {
-                        c.DrawChar('*', Kernel.font, new Pen(theme.ForeColor), sx, (int)Y + 4);
+                        c.DrawChar(sx, (int)Y + 4, '*', Kernel.font, theme.ForeColor, false);
                         sx += Kernel.font.Width;
                     }
                 }
@@ -73,17 +74,17 @@ namespace SipaaKernelV2.UI
                     int sx = (int)X + 4;
                     for (int i = 0; i < text.Length; i++)
                     {
-                        c.DrawChar('*', Kernel.font, new Pen(theme.ForeColor), sx, (int)Y + 4);
+                        c.DrawChar(sx, (int)Y + 4, '*', Kernel.font, theme.ForeColor, false);
                         sx += Kernel.font.Width;
                     }
-                }
+                }**/
             }
             
         }
 
         public override void Update()
         {
-            textW = text.Length * Kernel.font.Width;
+            textW = (int)Kernel.font.MeasureString(text);
             if (textW < 0) { textW = 0; }
 
             if (MouseManager.X > X && MouseManager.X < X + Width && MouseManager.Y > Y && MouseManager.Y < Y + Height)

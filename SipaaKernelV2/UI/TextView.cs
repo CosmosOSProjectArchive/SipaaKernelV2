@@ -1,9 +1,9 @@
 ﻿using Cosmos.System.Graphics;
 using Cosmos.System.Graphics.Fonts;
 using SipaaKernelV2.Core.Keyboard;
+using SipaaKernelV2.Core.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,9 +26,9 @@ namespace SipaaKernelV2.UI
             this.Y = y;
         }
 
-        public override void Draw(Canvas c)
+        public override void Draw(FrameBuffer c)
         {
-            c.DrawString(Text, Kernel.font, new Pen(TextColor), (int)X, (int)Y);
+            c.DrawString((int)X, (int)Y, Text, Kernel.font, TextColor);
         }
     }
 }

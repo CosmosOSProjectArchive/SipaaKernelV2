@@ -30,13 +30,11 @@ namespace SipaaKernelV2.Core.Commands
                     Dark d = new Dark();
                     ThemeManager.SetCurrentTheme(d);
                     Console.WriteLine("Dark theme sucessfully applied! Run GUI to see changes");
-                    Kernel.ResetAppList();
                 } else if (args[1] == "light")
                 {
                     Light d = new Light();
                     ThemeManager.SetCurrentTheme(d);
                     Console.WriteLine("Light theme sucessfully applied! Run GUI to see changes");
-                    Kernel.ResetAppList();
                 } else return CommandResult.InvalidArgs;
                 return CommandResult.Sucess;
             }

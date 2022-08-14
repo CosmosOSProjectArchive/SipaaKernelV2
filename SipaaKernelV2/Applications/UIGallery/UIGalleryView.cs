@@ -1,5 +1,7 @@
 ﻿using Cosmos.System.Graphics;
+using SipaaKernelV2.Core.Graphics;
 using SipaaKernelV2.UI;
+using Desk = SipaaKernelV2.Applications.SipaaDesktop.SipaaDesktop;
 
 namespace SipaaKernelV2.Applications.UIGallery
 {
@@ -8,7 +10,6 @@ namespace SipaaKernelV2.Applications.UIGallery
         Button closeButton, sampleButton;
         TextBox sampleTextBox;
         TextView sampleTextView;
-        CheckBox sampleCheckBox;
         Panel samplePanel;
         private List sampleList;
 
@@ -18,7 +19,6 @@ namespace SipaaKernelV2.Applications.UIGallery
             this.sampleButton.Bitmap = Bitmaps.cursor;
             this.sampleTextView = new TextView("Click on Sample Button to toggle sample panel visibility.", 8, 38);
             this.sampleTextBox = new TextBox(8, 138);
-            this.sampleCheckBox = new CheckBox("Do you like SipaaKernel?", 8, 100);
             this.samplePanel = new Panel(8, sampleTextBox.Y + 6, 200, 200);
             this.sampleList = new List(8, 200 + samplePanel.Height + 6);
             sampleList.AddButton(new Button("never", 0, 0));
@@ -29,15 +29,14 @@ namespace SipaaKernelV2.Applications.UIGallery
             this.closeButton = new Button("X", Kernel.ScreenWidth - 24, 0,24, 32);
         }
 
-        internal override void Draw(Canvas c)
+        internal override void Draw(FrameBuffer c)
         {
-            c.DrawFilledRectangle(ColorPens.blackPen, 0,0, (int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight);
-            c.DrawFilledRectangle(ColorPens.hoverButtonPen, 0, 0, (int)Kernel.ScreenWidth, 32);
-            c.DrawString("SipaaKernel UI Library", Kernel.font, ColorPens.whitePen, 24 + 9, 10);
-            c.DrawImageAlpha(Bitmaps.uilib, 4, 32 / 2 - (int)Bitmaps.uilib.Width / 2);
+            c.DrawFilledRectangle(0, 0, (int)Kernel.ScreenWidth, (int)Kernel.ScreenHeight, 0, Color.Black);
+            c.DrawFilledRectangle(0, 0, (int)Kernel.ScreenWidth, 32, 0, Color.FromARGB(0, 32, 32, 32));
+            c.DrawString(24 + 9, 10, "SipaaKernel UI Library", Kernel.font, Color.White);
+            c.DrawImage(4, 32 / 2 - (int)Bitmaps.uilib.Width / 2, Bitmaps.uilib, true);
             closeButton.Draw(c);
             sampleButton.Draw(c);
-            sampleCheckBox.Draw(c);
             sampleTextView.Draw(c);
             samplePanel.Draw(c);
             sampleTextBox.Draw(c);
@@ -49,14 +48,13 @@ namespace SipaaKernelV2.Applications.UIGallery
             closeButton.Update();
             samplePanel.Update();
             sampleButton.Update();
-            sampleCheckBox.Update();
             sampleTextBox.Update();
             sampleTextView.Update();
             sampleList.Update();
 
             if (closeButton.ButtonState == ButtonState.Clicked)
             {
-                Kernel.OpenApplication(Kernel.apps[0]);
+                Kernel.OpenApplication(new Desk());
             }
             if (sampleButton.ButtonState == ButtonState.Clicked)
             {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
+using SipaaKernelV2.Core.Graphics;
 
 namespace SipaaKernelV2.UI.SysTheme.Themes
 {
@@ -17,9 +17,9 @@ namespace SipaaKernelV2.UI.SysTheme.Themes
             BorderSize = 0;
             BorderColor = Color.Black;
 
-            BackColor = Color.FromArgb(32, 32, 32);
-            HoveredBackColor = Color.FromArgb(64, 64, 64);
-            ClickedBackColor = Color.FromArgb(12, 12, 12);
+            BackColor = Color.FromARGB(0, 32, 32, 32);
+            HoveredBackColor = Color.FromARGB(0, 64, 64, 64);
+            ClickedBackColor = Color.FromARGB(0, 12, 12, 12);
 
             ForeColor = Color.White;
         }
